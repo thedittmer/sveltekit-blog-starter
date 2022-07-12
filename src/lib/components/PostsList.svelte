@@ -16,12 +16,12 @@
           style="ratio: {post.coverWidth} / {post.coverHeight}"
           />
           <h2>
-            {post.title}
+            {@html post.title}
           </h2>
         </a>
       </article>
 
-      <p>{post.excerpt}</p>
+      <p>{@html post.excerpt}</p>
     </li>
   {/each}
 </ul>
