@@ -2,7 +2,7 @@
 
 <script context="module">
   import { postsPerPage, siteDescription } from '$lib/config'
-  import fetchPosts from '$lib/assets/js/fetchPosts'
+  import fetchWpPosts from '$lib/assets/js/fetchWpPosts'
 
   export const load = async ({ fetch, params }) => {
     try {
@@ -18,9 +18,9 @@
       
       let offset = (page * postsPerPage) - postsPerPage
     
-      const totalPostsRes = await fetch('/api/posts/count.json')
-      const { total } = await totalPostsRes.json()
-      const { posts } = await fetchPosts({ offset, page })
+      const totalRes = await fetch(`/api/posts/count.json`)
+      const { total } = await totalRes.json()
+      const { posts } = await fetchWpPosts({offset, page})
       
       return {
         status: 200,

@@ -1,5 +1,5 @@
 import { postsPerPage } from '$lib/config'
-import fetchPosts from '$lib/assets/js/fetchPosts'
+import fetchWpPosts from '$lib/assets/js/fetchWpPosts'
 
 export const get = async ({ url }) => {
 	try {
@@ -19,7 +19,7 @@ export const get = async ({ url }) => {
 		 * query parameters wouldn't result in static routes being generated at build time.
 		 * It's also a little cleaner in the code.
 		 */
-		const { posts } = await fetchPosts(options)
+		const { posts } = await fetchWpPosts(options)
 		
 		return {
 			status: 200,
