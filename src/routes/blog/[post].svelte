@@ -8,7 +8,7 @@
       // console.log(id, "this should be the slug");
 	  	const postRes = await fetch(`/api/post/${id}.json`)
 	  	const  {post}  = await postRes.json()
-      console.log(post.post.slug);
+     
 	  	return {
 	  		props: { post }
 	  	}
@@ -19,9 +19,10 @@
 </script>
 
 
-<script>
+<script >
   export let post
-
+  const formatDate = (date) => new Date(date).toLocaleDateString();
+	const categories = post.categories?.nodes?.map((category) => category.name) ?? [];
 
     //const { title, excerpt, date, updated, coverImage, coverWidth, coverHeight, categories } = meta 
  </script> 
@@ -88,14 +89,14 @@
 		 alt={post.featuredImage.node.altText} />
 	{/if}
 	<h1>{post.title}</h1>
-	<!-- <p class="post-meta">
-		✍️ {post.author.node.name} on (post.date)
-	</p> -->
+	  <p class="post-meta">
+		✍️ {post.author.node.name} on {formatDate(post.date)}
+	</p>  
 	<div>{@html post.content}</div>
-	<!-- {#if categories.length}
+	  {#if categories.length}
 		<div class="category-list">
 			<h4>Categorized As</h4>
 			<p>{categories.join(', ')}</p>
 		</div>
-	{/if} -->
+	{/if}  
 </article>
