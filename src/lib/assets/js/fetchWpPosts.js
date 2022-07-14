@@ -51,7 +51,7 @@ const fetchWpPosts = async ({ offset = 0, limit = postsPerPage, category = '' } 
 
 	// Combine the endpoint with the query string.
 	var fetchUrl = wpGraphqlEndpoint + queryString;
-	console.log(fetchUrl)
+	// console.log(fetchUrl)
 	// Fetch the url.
 	const resPosts = fetch(fetchUrl)
 		// When the promise resolves return the response as parsed json.

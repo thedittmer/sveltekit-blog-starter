@@ -1,53 +1,51 @@
 <!-- This file renders each individual blog post for reading. Be sure to update the svelte:head below -->
 
-<script context="module">
-  export const load = async ({ params }) => {
-    try {  
-      const post = await import(`../../lib/posts/${params.post}.md`)
+ <script context="module">
+  
+  	export const load = async ({ fetch, params }) => {
+      const id  = params.post;
+    
+      // console.log(id, "this should be the slug");
+	  	const postRes = await fetch(`/api/post/${id}.json`)
+	  	const  {post}  = await postRes.json()
+      console.log(post.post.slug);
+	  	return {
+	  		props: { post }
+	  	}
+	  }
 
-      return {
-        props: {
-          PostContent: post.default,
-          meta: { ...post.metadata, slug: params.post } 
-        }
-      }
-    } catch(error) {
-      return {
-        status: 404,
-        error: error.message
-      }
-    }
-  }
+ 
+
 </script>
 
 
 <script>
-  export let PostContent
-  export let meta
+  export let post
 
-  const { title, excerpt, date, updated, coverImage, coverWidth, coverHeight, categories } = meta
-</script>
+
+    //const { title, excerpt, date, updated, coverImage, coverWidth, coverHeight, categories } = meta 
+ </script> 
 
 
 <svelte:head>
   <!-- Be sure to add your image files and un-comment the lines below -->
-  <title>{title}</title>
+  <!-- <title>{title}</title>
   <meta data-key="description" name="description" content="{excerpt}">
   <meta property="og:type" content="article" />
   <meta property="og:title" content={title} />
   <meta name="twitter:title" content={title} />
   <meta property="og:description" content={excerpt} />
-  <meta name="twitter:description" content={excerpt} />
+  <meta name="twitter:description" content={excerpt} /> -->
   <!-- <meta property="og:image" content="https://yourdomain.com/image_path" /> -->
-  <meta property="og:image:width" content={coverWidth} />
-  <meta property="og:image:height" content={coverHeight} />
+  <!-- <meta property="og:image:width" content={coverWidth} />
+  <meta property="og:image:height" content={coverHeight} /> -->
   <!-- <meta name="twitter:image" content="https://yourdomain.com/image_path" /> -->
 </svelte:head>
 
 
-<article class="post">
+<!-- <article class="post">
   <!-- You might want to add an alt frontmatter attribute. If not, leaving alt blank here works, too. -->
-  <img
+  <!-- <img
     class="cover-image"
     src="{coverImage}"
     alt=""
@@ -80,4 +78,24 @@
       </ul>
     </aside>
   {/if}
+</article>  -->
+
+<article>
+	{#if post.featuredImage}
+		<img
+		class="mx-auto h-auto w-auto"
+		 src={post.featuredImage.node.sourceUrl} 
+		 alt={post.featuredImage.node.altText} />
+	{/if}
+	<h1>{post.title}</h1>
+	<!-- <p class="post-meta">
+		✍️ {post.author.node.name} on (post.date)
+	</p> -->
+	<div>{@html post.content}</div>
+	<!-- {#if categories.length}
+		<div class="category-list">
+			<h4>Categorized As</h4>
+			<p>{categories.join(', ')}</p>
+		</div>
+	{/if} -->
 </article>
