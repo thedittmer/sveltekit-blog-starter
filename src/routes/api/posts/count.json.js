@@ -1,37 +1,14 @@
-import { wpGraphqlEndpoint } from '$lib/config';
+import wpGraphql from "$lib/assets/js/wpGraphql";
 
 export const get = async () => {
 	try {
-		var query = `
-		{
-			posts {
-				pageInfo {
-					total
-				}
-			}
-		}
-		`;
-
-		// Build query string.
-		var queryString = '?query=' + query;
-
-		// Combine the endpoint with the query string.
-		var fetchUrl = wpGraphqlEndpoint + queryString;
-
-		// Fetch the url.
-		const resTotal = await fetch(fetchUrl)
-			// When the promise resolves return the response as parsed json.
-			.then(function (response) {
-				return response.json();
-			})
-			.then(function (response) {
-				return response.data.posts.pageInfo.total;
-			});
+		const resTotal = await wpGraphql( { query_id: 'posts_total' } )
+		const totalPosts = resTotal.data.posts.pageInfo.total
 
 		return {
 			status: 200,
 			body: {
-				total: resTotal,
+				total: totalPosts,
 			}
 		};
 	} catch {
