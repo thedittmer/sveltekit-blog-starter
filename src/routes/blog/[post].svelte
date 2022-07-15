@@ -4,10 +4,15 @@
   
   	export const load = async ({ fetch, params }) => {
       const id  = params.post;
-    
+      
       // console.log(id, "this should be the slug");
+
+      // idk why but the data must be pulled out like so in the below console log.
+      // console.log(post.data.post.date);
 	  	const postRes = await fetch(`/api/post/${id}.json`)
 	  	const  {post}  = await postRes.json()
+      
+      
      
 	  	return {
 	  		props: { post }
@@ -20,9 +25,13 @@
 
 
 <script >
+import { dataset_dev } from "svelte/internal";
+
+
   export let post
   const formatDate = (date) => new Date(date).toLocaleDateString();
-	const categories = post.categories?.nodes?.map((category) => category.name) ?? [];
+	const categories = post.data.post.categories?.nodes?.map((category) => category.name) ?? [];
+  
 
     //const { title, excerpt, date, updated, coverImage, coverWidth, coverHeight, categories } = meta 
  </script> 
@@ -82,17 +91,17 @@
 </article>  -->
 
 <article>
-	{#if post.featuredImage}
+	 {#if post.data.post.featuredImage}
 		<img
 		class="mx-auto h-auto w-auto"
-		 src={post.featuredImage.node.sourceUrl} 
-		 alt={post.featuredImage.node.altText} />
+		 src={post.data.post.featuredImage.node.sourceUrl} 
+		 alt={post.data.post.featuredImage.node.altText} />
 	{/if}
-	<h1>{post.title}</h1>
+	<h1>{post.data.post.title}</h1>
 	  <p class="post-meta">
-		✍️ {post.author.node.name} on {formatDate(post.date)}
+		✍️ {post.data.post.author.node.name} on {formatDate(post.data.post.date)}
 	</p>  
-	<div>{@html post.content}</div>
+	<div>{@html post.data.post.content}</div>
 	  {#if categories.length}
 		<div class="category-list">
 			<h4>Categorized As</h4>

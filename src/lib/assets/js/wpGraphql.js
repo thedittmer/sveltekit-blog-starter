@@ -1,8 +1,8 @@
 
 import { postsPerPage, wpGraphqlEndpoint } from "$lib/config";
 
-const wpGraphql = async ( { query_id,  offset = 0 } ) => {
-    
+const wpGraphql = async ( { query_id,  offset = 0, variables } ) => {
+   
     const limit = postsPerPage
 
     // get cursor
@@ -36,7 +36,36 @@ const wpGraphql = async ( { query_id,  offset = 0 } ) => {
     switch (query_id) {
         case 'post':
             query = `
-            
+            query getPostBySlug($slug: ID!) {
+              post(id: $slug, idType: SLUG) {
+                  databaseId
+            slug
+            uri
+                date
+                title
+                content
+                author {
+                  node {
+                    name
+                  }
+                }
+                categories {
+                  nodes {
+                    name
+                  }
+                }
+                featuredImage {
+                  node {
+                    sourceUrl
+                    altText
+                    mediaDetails {
+                      width
+                      height
+                    }
+                  }
+                }
+              }
+            }
             `;
           break;
         case 'posts':
@@ -72,13 +101,24 @@ const wpGraphql = async ( { query_id,  offset = 0 } ) => {
       }
 
 	// Build query string.
-	var queryString = '?query=' + query;
+//	var queryString = '?query=' + query;
 
 	// Combine the endpoint with the query string.
-	var fetchUrl = wpGraphqlEndpoint + queryString;
+//	var fetchUrl = wpGraphqlEndpoint + queryString;
 	
 	// Fetch the url.
-	const response = fetch(fetchUrl)
+	const response = fetch(wpGraphqlEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-type': 'application/json'
+    },
+    body: JSON.stringify({
+      query,
+      variables:{
+        slug: variables
+      }
+    })
+  })
 		// When the promise resolves return the response as parsed json.
 		.then(function (response) {
 			return response.json();

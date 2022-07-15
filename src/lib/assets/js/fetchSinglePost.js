@@ -7,10 +7,11 @@ const fetchSinglePost = async (id) => {
     variables: 'slug: ' + id
   }
   
+  
 	const resPost = await wpGraphql(options)
   
     const post  = await resPost;
-         
+        //    console.log(post, "from fetchsinglepost");
     return{
         post
     }
